@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains a Python script that solves a specific [PentesterLab](https://pentesterlab.com/) challenge demonstrating an Insecure Direct Object Reference (IDOR) vulnerability. The challenge involves exploiting the structure of MongoDB's `ObjectId` to enumerate and access an administrator's account, ultimately retrieving a hidden key.
+This repository contains a Python script that solves a specific [PentesterLab](https://pentesterlab.com/exercises/mongo-idor-iii) challenge demonstrating an Insecure Direct Object Reference (IDOR) vulnerability. The challenge involves exploiting the structure of MongoDB's `ObjectId` to enumerate and access an administrator's account, ultimately retrieving a hidden key.
 
 ## The Challenge
 
@@ -23,8 +23,11 @@ The exploitation relied on the predictable nature of MongoDB ObjectIds under spe
 2.  **Sequential Creation:** If accounts are created sequentially, even across small time differences, their timestamps will be close, and their counters will increment predictably.
 
 **The following screenshot shows the initial response listing user ObjectIds:**
+![image](https://github.com/user-attachments/assets/23ca3b72-f559-4b7d-ac44-dde33c27cdfd)
 
-![](screenshots/user_ids_response.png "Response showing user ObjectIds")
+![image](https://github.com/user-attachments/assets/a03d3f94-cd82-4f44-82c5-b7a0fefe4f0c)
+
+
 
 ## Solution Script: `solve_idor.py`
 
