@@ -23,15 +23,16 @@ The exploitation relied on the predictable nature of MongoDB ObjectIds under spe
 2.  **Sequential Creation:** If accounts are created sequentially, even across small time differences, their timestamps will be close, and their counters will increment predictably.
 
 **The following screenshot shows the initial response listing user ObjectIds:**
+
 ![image](https://github.com/user-attachments/assets/23ca3b72-f559-4b7d-ac44-dde33c27cdfd)
 
 ![image](https://github.com/user-attachments/assets/a03d3f94-cd82-4f44-82c5-b7a0fefe4f0c)
 
 
 
-## Solution Script: `solve_idor.py`
+## Solution Script: `mongo.py`
 
-The provided Python script (`solve_idor.py`) automates the exploitation process:
+The provided Python script (`mongo.py`) automates the exploitation process:
 
 1.  **Deconstructs a Reference ObjectId:** It takes an `ObjectId` from a known user (e.g., your own account or one obtained from an enumeration endpoint) and extracts its timestamp, constant random bytes, and counter.
 2.  **Generates Guesses:** It then iteratively decrements the timestamp (to search for accounts created "a few seconds before") and the counter (to account for sequential creation within the same second or prior seconds).
@@ -47,33 +48,9 @@ The script leverages Python's `struct` and `binascii` modules to correctly pack 
 * **Random Bytes:** The next 5 bytes are a process-specific random value. This value is extracted from the base ObjectId and kept constant for all generated guesses.
 * **Counter:** The last 3 bytes are an incrementing counter. As observed, this part increments predictably. The script decrements this counter by small amounts to find the admin's slightly earlier account.
 
-## Usage
-
-1.  **Clone the repository:**
-    ````bash
-    git clone [https://github.com/YOUR_GITHUB_USERNAME/MongoDB-IDOR-Exploit.git](https://github.com/YOUR_GITHUB_USERNAME/MongoDB-IDOR-Exploit.git)
-    cd MongoDB-IDOR-Exploit
-    ````
-2.  **Install dependencies:**
-    ````bash
-    pip install requests
-    ````
-3.  **Update Configuration:**
-    Open `solve_idor.py` and modify the following variables based on your current PentesterLab challenge instance:
-    * `TARGET_HOST`: Set this to the `Host` header (e.g., `api-ptl-debb5a98e7aa-93e57d966e82.libcurl.me`) from your captured requests. This changes for each new challenge instance.
-    * `YOUR_OBSERVED_OBJECT_ID`: Provide an `ObjectId` from an account you can observe (e.g., `6865f8370954c90009033a70` from the example).
-    * (Optional) Adjust `TIMESTAMP_DECREMENT_RANGE` and `COUNTER_DECREMENT_RANGE` if the default ranges don't find the key quickly (e.g., if the admin account was created much earlier).
-4.  **Run the script:**
-    ````bash
-    python3 solve_idor.py
-    ````
 
 **The following screenshot shows the successful response with the `PTLAB_KEY`:**
 
-![](screenshots/admin_access_success.png "Response showing the PTLAB_KEY in the admin account")
+![image](https://github.com/user-attachments/assets/2ea0312f-8b3b-4309-be0c-43ed6ab3b1bb)
 
-**Optionally, you can include a screenshot of the script running:**
 
-The script will print its progress and, upon success, display the administrator's account data, including the `PTLAB_KEY` (as shown in the screenshot above).
-
-## Example Output (Successful Run)
